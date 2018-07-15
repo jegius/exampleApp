@@ -9,13 +9,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var static_datasource_1 = require("./static.datasource");
+var http_1 = require("@angular/http");
 var repository_model_1 = require("./repository.model");
+var rest_datasource_1 = require("./rest.datasource");
 var ModelModule = (function () {
     function ModelModule() {
     }
     ModelModule = __decorate([
-        core_1.NgModule({ providers: [repository_model_1.Model, static_datasource_1.StaticDataSource] }), 
+        core_1.NgModule({
+            imports: [http_1.HttpModule, http_1.JsonpModule],
+            providers: [repository_model_1.Model, rest_datasource_1.RestDataSource, { provide: rest_datasource_1.REST_URL, useValue: "http://" + location.hostname + ":3500/products" }] }), 
         __metadata('design:paramtypes', [])
     ], ModelModule);
     return ModelModule;
