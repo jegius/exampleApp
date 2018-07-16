@@ -2,12 +2,7 @@ import {Component, Inject} from "@angular/core";
 import {NgForm} from "@angular/forms";
 import {Product} from "../model/product.model";
 import {Model} from "../model/repository.model";
-import {MODES, SharedState, SHARED_STATE} from "./sharedState.model";
-import {Observable} from "rxjs/Observable";
-import "rxjs/add/operator/filter";
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/distinctUntilChanged"
-import "rxjs/add/operator/skipWhile";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
     selector: "paForm",
@@ -18,17 +13,12 @@ import "rxjs/add/operator/skipWhile";
 export class FormComponent {
     product: Product = new Product();
 
-    constructor(private model: Model, @Inject(SHARED_STATE) private stateEvents: Observable<SharedState>) {
-        stateEvents
-            // .skipWhile(state => state.mode == MODES.EDIT)
-            // .distinctUntilChanged((firstState, secondState) => firstState.mode == secondState.mode && firstState.id == secondState.id)
-            .subscribe(update => {
-            this.product = new Product();
-            if (update.id != undefined) {
-                Object.assign(this.product, this.model.getProduct(update.id));
-            }
-            this.editing = update.mode == MODES.EDIT;
-        });
+    constructor(private model: Model, activeRoute: ActivatedRoute, private router: Router) {
+        this.editing = activeRoute.snapshot.params["mode"] == "edit";
+        let id = activeRoute.snapshot.params["id"];
+        if (id != null) {
+            Object.assign(this.product, model.getProduct(id) || new Product());
+        }
     }
 
     editing: boolean = false;
@@ -36,8 +26,7 @@ export class FormComponent {
     submitForm(form: NgForm) {
         if (form.valid) {
             this.model.saveProduct(this.product);
-            this.product = new Product();
-            form.reset();
+            this.router.navigateByUrl("/");
         }
     }
 

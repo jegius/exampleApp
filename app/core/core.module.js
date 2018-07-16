@@ -14,26 +14,20 @@ var forms_1 = require("@angular/forms");
 var model_module_1 = require("../model/model.module");
 var table_component_1 = require("./table.component");
 var form_component_1 = require("./form.component");
-var sharedState_model_1 = require("./sharedState.model");
-var Subject_1 = require("rxjs/Subject");
 var state_pipe_1 = require("./state.pipe");
 var message_module_1 = require("../messages/message.module");
-var message_service_1 = require("../messages/message.service");
-var repository_model_1 = require("../model/repository.model");
 var router_1 = require("@angular/router");
+var productCount_component_1 = require("./productCount.component");
+var categoryCount_component_1 = require("./categoryCount.component");
+var notFound_component_1 = require("./notFound.component");
 var CoreModule = (function () {
     function CoreModule() {
     }
     CoreModule = __decorate([
         core_1.NgModule({
             imports: [platform_browser_1.BrowserModule, forms_1.FormsModule, model_module_1.ModelModule, message_module_1.MessageModule, router_1.RouterModule],
-            declarations: [table_component_1.TableComponent, form_component_1.FormComponent, state_pipe_1.StatePipe],
-            exports: [model_module_1.ModelModule, table_component_1.TableComponent, form_component_1.FormComponent],
-            providers: [{
-                    provide: sharedState_model_1.SHARED_STATE, deps: [message_service_1.MessageService, repository_model_1.Model], useFactory: function (messageService, model) {
-                        return new Subject_1.Subject();
-                    }
-                }]
+            declarations: [table_component_1.TableComponent, form_component_1.FormComponent, state_pipe_1.StatePipe, productCount_component_1.ProductCountComponent, categoryCount_component_1.CategoryCountComponent, notFound_component_1.NotFoundComponent],
+            exports: [model_module_1.ModelModule, table_component_1.TableComponent, form_component_1.FormComponent]
         }), 
         __metadata('design:paramtypes', [])
     ], CoreModule);

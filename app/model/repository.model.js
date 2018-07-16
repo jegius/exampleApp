@@ -9,7 +9,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-//import { StaticDataSource } from "./static.datasource";
 var rest_datasource_1 = require("./rest.datasource");
 var Model = (function () {
     function Model(dataSource) {
@@ -17,8 +16,6 @@ var Model = (function () {
         this.dataSource = dataSource;
         this.products = new Array();
         this.locator = function (p, id) { return p.id == id; };
-        //this.products = new Array<Product>();
-        // this.dataSource.getData().forEach(p => this.products.push(p));
         this.dataSource.getData().subscribe(function (data) { return _this.products = data; });
     }
     Model.prototype.getProducts = function () {
@@ -27,6 +24,26 @@ var Model = (function () {
     Model.prototype.getProduct = function (id) {
         var _this = this;
         return this.products.find(function (p) { return _this.locator(p, id); });
+    };
+    Model.prototype.getNextProductId = function (id) {
+        var _this = this;
+        var index = this.products.findIndex(function (p) { return _this.locator(p, id); });
+        if (index > -1) {
+            return this.products[this.products.length > index + 2 ? index + 1 : 0].id;
+        }
+        else {
+            return id || 0;
+        }
+    };
+    Model.prototype.getPreviousProductid = function (id) {
+        var _this = this;
+        var index = this.products.findIndex(function (p) { return _this.locator(p, id); });
+        if (index > -1) {
+            return this.products[index > 0 ? index - 1 : this.products.length - 1].id;
+        }
+        else {
+            return id || 0;
+        }
     };
     Model.prototype.saveProduct = function (product) {
         var _this = this;
@@ -48,13 +65,6 @@ var Model = (function () {
                 _this.products.splice(index, 1);
             }
         });
-    };
-    Model.prototype.generateID = function () {
-        var candidate = 100;
-        while (this.getProduct(candidate) != null) {
-            candidate++;
-        }
-        return candidate;
     };
     Model = __decorate([
         core_1.Injectable(), 
