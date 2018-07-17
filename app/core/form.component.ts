@@ -12,13 +12,17 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class FormComponent {
     product: Product = new Product();
+    originalProduct = new Product();
 
     constructor(private model: Model, activeRoute: ActivatedRoute, private router: Router) {
-        this.editing = activeRoute.snapshot.params["mode"] == "edit";
-        let id = activeRoute.snapshot.params["id"];
-        if (id != null) {
-            Object.assign(this.product, model.getProduct(id) || new Product());
-        }
+        activeRoute.params.subscribe(params => {
+            this.editing = params["mode"] == "edit";
+            let id = params["id"];
+            if (id != null) {
+                Object.assign(this.product, model.getProduct(id) || new Product());
+                Object.assign(this.originalProduct, this.product);
+            }
+        })
     }
 
     editing: boolean = false;
@@ -26,11 +30,8 @@ export class FormComponent {
     submitForm(form: NgForm) {
         if (form.valid) {
             this.model.saveProduct(this.product);
+            this.originalProduct = this.product;
             this.router.navigateByUrl("/");
         }
-    }
-
-    resetForm() {
-        this.product = new Product();
-    }
-}
+    }    //resetForm() {    //    this.product = new Product();    //}
+ }
