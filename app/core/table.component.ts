@@ -2,8 +2,15 @@ import {Component, Inject} from "@angular/core";
 import {Product} from "../model/product.model";
 import {Model} from "../model/repository.model";
 import {ActivatedRoute} from "@angular/router";
+import {HighlightTrigger} from "./table.animations";
+import {AnimationTransitionEvent} from "@angular/core";
 
-@Component({selector: "paTable", moduleId: module.id, templateUrl: "table.component.html"})
+@Component({
+    selector: "paTable",
+    moduleId: module.id,
+    templateUrl: "table.component.html",
+    animations: [HighlightTrigger]
+})
 export class TableComponent {
     category: string = null;
 
@@ -27,5 +34,16 @@ export class TableComponent {
 
     deleteProduct(key: number) {
         this.model.deleteProduct(key);
+    }
+
+    highlightCategory: string = "";
+
+    getRowState(category: string): string {
+        return this.highlightCategory == "" ? "" :
+            this.highlightCategory == category ? "selected" : "notselected";
+    }
+
+    writeAnimationEvent(event: AnimationTransitionEvent, name: string, start: boolean) {
+        console.log("Animation " + name + " " + (start ? 'Start' : 'Done') + " from: " + event.fromState + " to: " + event.toState + " time: " + event.totalTime);
     }
 }
